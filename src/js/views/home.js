@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from "react";
 import rigoImage from "../../img/rigo-baby.jpg";
 import "../../styles/home.css";
-import { Card } from "./Card.jsx";
+import { Card } from "../component/Card.jsx";
 
 export const Home=()=>{
 	const [imageList,setImageList]=useState([]);
 
-	const topics=['people','planets','vehicles','species']
+	const topics=['people',
+		// 'planets','vehicles','species','starships'
+	]
 	
 	// useEffect(()=>{
 	// 	console.log(imageList);
@@ -25,12 +27,12 @@ export const Home=()=>{
 		getData();
 	},[])
 	return(
-		<div className="container-fluid mx-auto">
+		<div className="container-fluid mx-auto overflow-auto">
 			{imageList.map((pictureSet)=>{
 				return(
 					<>
 						<h1>{pictureSet[0]}</h1>
-						<div className="row gx-2 overflow-auto my-auto">
+						<div className="row gx-2 my-auto">
 							{pictureSet[1].map((picInfo)=>{
 								console.log(picInfo)
 								return(

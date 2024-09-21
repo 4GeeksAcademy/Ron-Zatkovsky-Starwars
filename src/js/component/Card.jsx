@@ -1,9 +1,13 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+import { Context } from "../store/appContext";
 
 export const Card = (props) => {
   const [cardInfo, setCardInfo] = useState([]);
-  const [cardPics,setCardPics]=useState([]);
   const [fixedCategory,setFixedCategory]=useState("");
+  const [liked,setLiked]=useState(false);
+
+  const {store,actions}=useContext(Context);
 
   useEffect(() => {
     const getCardInfo = async () => {
@@ -32,17 +36,38 @@ export const Card = (props) => {
     }
   },[])
 
+  const favoriteHandler=(name)=>{
+    console.log(name)
+    if(liked===false){
+      actions.setFavorites([...store.favorites,name])
+      setLiked(true);
+    }
+    else{
+      const newstore=store.favorites.map((item)=>{
+        if(item!=name){
+          return item;
+        }
+      });
+      actions.setFavorites(newstore);
+      setLiked(false);
+    }
+  }
   return (
     <div className="col">
         {Object.entries(cardInfo).map(([name,info])=>{
             return(
                 <div className="col mb-2" key={props.uid}>
                   <div className="card overflow-auto" style={{width:"18vw",height:'20vw'}}>
-                    <h6 className="card-title mx-auto">{name}</h6>
+                    <div className="row d-flex">
+                      <div className="col-10"><strong>{name}</strong></div>
+                      <button className="col" onClick={()=>{favoriteHandler(name)}}>
+                        <i class="fa-regular fa-heart"></i>
+                      </button>
+                    </div>
                     <img src={`https://starwars-visualguide.com/assets/img/${fixedCategory}/${props.uid}.jpg`} class="card-img-top"/>
-                    {console.log(name," ",info)}
-                    {Object.entries(info[0]).map(([property,detail])=>{
-                      if(property!="name" && property!="url" && property!="created" && property!="edited" && property!="homeworld" && property!="people" && property!="pilots" && property!="films") {
+                    {/* {console.log(name," ",info)} */}
+                    {Object.entries(info[0]).map(([property,detail],index)=>{
+                      if(index<3 && property!="name" && property!="url" && property!="created" && property!="edited" && property!="homeworld" && property!="people" && property!="pilots" && property!="films") {
                         return(
                           <>
                             <div className="card-body p-0 m-0" key={name}>
@@ -54,7 +79,11 @@ export const Card = (props) => {
                         return null
                       }
                     })}
-                    {/* <a href="#" class="btn btn-primary">Go somewhere</a> */}
+                    <Link to={`/CardDetails/${props.category}/${props.uid}`}>
+                      <span className="btn btn-primary btn-lg" href="#" role="button">
+                        Details
+                      </span>
+                    </Link>
                   </div>
                 </div>
             )
