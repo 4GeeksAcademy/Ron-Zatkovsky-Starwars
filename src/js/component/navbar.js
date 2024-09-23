@@ -1,6 +1,7 @@
 import React, { useContext } from "react";
 import { Link } from "react-router-dom";
 import { Context } from "../store/appContext";
+import { CardDetails } from "../views/CardDetails.jsx";
 
 export const Navbar = () => {
 	const {store,action}=useContext(Context);
@@ -16,8 +17,23 @@ export const Navbar = () => {
 						Favorites
 					</button>
 					<div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-						{store.favorites.map((item,index)=>(
-							<li key={index}>{item}</li>
+						{Object.entries(store.favorites).map(([cat,array],index)=>(
+							array===undefined?null:
+							<ul key={index}>
+								{console.log('array ',array)}
+								{store.favorites[cat]!=undefined?<strong>{cat}</strong>:null}
+								{array.map((favoriteName)=>{
+									if(!(favoriteName===null || favoriteName===undefined || favoriteName[0]==="")){
+										return (
+										<li>
+											<Link to={`/CardDetails/${cat}/${favoriteName[1]}`}>
+												{favoriteName[0]}
+											</Link>
+										</li>
+										)
+									}
+								})}
+							</ul>
 						))}
 					</div>
 				</div>

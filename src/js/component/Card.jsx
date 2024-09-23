@@ -36,35 +36,66 @@ export const Card = (props) => {
     }
   },[])
 
+  const isLiked=()=>{
+    let status=false;
+    Object.entries(store.favorites).map(([cat,array])=>{
+      if(cat===props.category.toLowerCase()){
+        array?array.forEach(element => {
+          if(element[1]===props.uid){
+            status=true;
+            return
+          }
+        }):null;
+      }
+      return
+    })
+    setLiked(status)
+    return 
+  }
+
+  useEffect(()=>{
+    isLiked();
+  },[])
+
   const favoriteHandler=(name)=>{
-    console.log(name)
     if(liked===false){
-      actions.setFavorites([...store.favorites,name])
-      setLiked(true);
+      let temp=store.favorites;
+      if(!temp[props.category]){
+        temp[props.category]=[];
+      }
+      temp[props.category].push([name,props.uid]);
+      actions.setFavorites(temp)
     }
     else{
-      const newstore=store.favorites.map((item)=>{
-        if(item!=name){
-          return item;
+      let temp=store.favorites
+      Object.entries(temp).map(([cat,array])=>{
+        if(cat===props.category){
+          const removedArray=array.filter((item)=>{
+            if(item[0]!=name){
+              return item;
+            }
+          })
+          removedArray[0]===undefined&&removedArray.length<=1?temp[cat]=undefined:temp[cat]=removedArray;
         }
+        return
       });
-      actions.setFavorites(newstore);
-      setLiked(false);
+      actions.setFavorites(temp);
     }
+    isLiked();
   }
   return (
     <div className="col">
         {Object.entries(cardInfo).map(([name,info])=>{
             return(
                 <div className="col mb-2" key={props.uid}>
-                  <div className="card overflow-auto" style={{width:"18vw",height:'20vw'}}>
-                    <div className="row d-flex">
-                      <div className="col-10"><strong>{name}</strong></div>
-                      <button className="col" onClick={()=>{favoriteHandler(name)}}>
-                        <i class="fa-regular fa-heart"></i>
+                  <div className="card overflow-auto px-2" style={{width:"18vw",height:'20vw'}}>
+                    <div className="row d-flex pe-2">
+                      <div className="col pe-0"><strong>{name}</strong></div>
+                      <button className="col-2 p-0" onClick={()=>{favoriteHandler(name)}}>
+                        <i className="fa fa-heart" style={{color:liked?"red":"lightGray"}}/>
                       </button>
                     </div>
-                    <img src={`https://starwars-visualguide.com/assets/img/${fixedCategory}/${props.uid}.jpg`} class="card-img-top"/>
+                    <img style={{width:'100%'}} src={`https://starwars-visualguide.com/assets/img/${fixedCategory}/${props.uid}.jpg`} class="card-img-top"/>
                     {/* {console.log(name," ",info)} */}
                     {Object.entries(info[0]).map(([property,detail],index)=>{
                       if(index<3 && property!="name" && property!="url" && property!="created" && property!="edited" && property!="homeworld" && property!="people" && property!="pilots" && property!="films") {

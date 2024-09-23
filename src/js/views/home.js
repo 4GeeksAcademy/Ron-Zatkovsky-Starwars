@@ -7,7 +7,8 @@ export const Home=()=>{
 	const [imageList,setImageList]=useState([]);
 
 	const topics=['people',
-		// 'planets','vehicles','species','starships'
+		// 'planets','vehicles','species',
+		// 'starships'
 	]
 	
 	// useEffect(()=>{
@@ -34,7 +35,6 @@ export const Home=()=>{
 						<h1>{pictureSet[0]}</h1>
 						<div className="row gx-2 my-auto">
 							{pictureSet[1].map((picInfo)=>{
-								console.log(picInfo)
 								return(
 									<Card url={picInfo.url} name={picInfo.name} category={pictureSet[0]} uid={picInfo.uid}/>
 								)								
