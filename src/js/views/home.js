@@ -7,8 +7,8 @@ export const Home=()=>{
 	const [imageList,setImageList]=useState([]);
 
 	const topics=['people',
-		// 'planets','vehicles','species',
-		// 'starships'
+		'planets','vehicles','species',
+		'starships'
 	]
 	
 	// useEffect(()=>{
